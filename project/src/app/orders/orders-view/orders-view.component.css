@@ -1,0 +1,19 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  /* font-size: 14px; */
+  width: 80%;
+}
+
+th {
+  color: rgb(247, 7, 167);
+  font-weight: bolder;
+}
+.cust-icon {
+  /* // color:#3f51b5; */
+  color: blue;
+  zoom: 1.5;
+  cursor: pointer;
+}

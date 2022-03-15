@@ -1,0 +1,175 @@
+<div class="container">
+  <ul class="nav justify-content-end">
+    <li class="nav-item">
+      <button mat-raised-button (click)="logout()" color="primary" class="button-customize">
+       Logout</button>
+    </li>
+  </ul>
+
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card-body">
+        <div class="page-title-box d-flex align-items-center justify-content-end">
+          <div class="page-title-right">
+            <button mat-raised-button (click)="addOrders(ordersModel)" color="primary" class="button-customize">
+              + Add Orders</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-3">
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+    </mat-form-field>
+  </div>
+
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let row; let i=index"> {{ i+1 }} </td>
+      </ng-container>
+      <ng-container matColumnDef="onumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Number </th>
+        <td mat-cell *matCellDef="let row; let i=index"> {{ row.onumber  }} </td>
+      </ng-container>
+      <ng-container matColumnDef="oduedate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Order Date</th>
+        <td mat-cell *matCellDef="let row; let i=index" class=""> {{ row.oduedate | date : 'short' }} </td>
+      </ng-container>
+      <ng-container matColumnDef="cname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Name</th>
+        <td mat-cell *matCellDef="let row; let i=index" class=""> {{ row.cname }} </td>
+      </ng-container>
+      <ng-container matColumnDef="caddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer Address </th>
+        <td mat-cell *matCellDef="let row; let i=index" class=""> {{ row.caddress }} </td>
+      </ng-container>
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customr Phone</th>
+        <td mat-cell *matCellDef="let row; let i=index" class=""> {{ row.phone  }} </td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Amount</th>
+        <td mat-cell *matCellDef="let row; let i=index" class=""> {{ row.total  }} </td>
+      </ng-container>
+      <ng-container matColumnDef="edit">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Edit</th>
+        <td mat-cell *matCellDef="let row; let i=index" class="">
+          <i class="material-icons cust-icon" (click)="editOrders(ordersModel, row)" >info</i>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Delete</th>
+        <td mat-cell *matCellDef="let row; let i=index" class="">
+          <i class="material-icons cust-icon" (click)="deleteOrders(row)" >delete</i>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButton></mat-paginator>
+  </div>
+
+<ng-template #ordersModel let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title mt-0">Add Orders</h5>
+    <button type="button" class="close" aria-hidden="true" (click)="modalDismiss()">×</button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <form class="row g-3" [formGroup]="orderForm" (ngSubmit)="onSubmit()">
+              <div class="row">
+                <div class="col-md-6">
+                    <label for="cname">Customer Name</label>
+                    <input type="text" formControlName="cname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['cname'].errors }" />
+                    <div *ngIf="submitted && f['cname'].errors" class="invalid-feedback">
+                        <div *ngIf="f['cname'].errors['required']">Customer Name is required</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="phone">Customer Phone</label>
+                    <input type="number" formControlName="phone" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['phone'].errors }" />
+                    <div *ngIf="submitted && f['phone'].errors" class="invalid-feedback">
+                        <div *ngIf="f['phone'].errors['required']">Password Phone is required</div>
+                    </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="onumber">Order Number</label>
+                <input type="text" formControlName="onumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['onumber'].errors }" />
+                <div *ngIf="submitted && f['onumber'].errors" class="invalid-feedback">
+                    <div *ngIf="f['onumber'].errors['required']">Order Number is required</div>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+              <label for="oduedate">Order Due Date</label>
+              <input type="date" formControlName="oduedate" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['oduedate'].errors }" />
+              <div *ngIf="submitted && f['oduedate'].errors" class="invalid-feedback">
+                  <div *ngIf="f['oduedate'].errors['required']">Order Due Date is required</div>
+              </div>
+        </div>
+
+
+          <div class="col-md-6">
+            <label for="total">Total Amount</label>
+            <input type="number" formControlName="total" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['total'].errors }" />
+            <div *ngIf="submitted && f['total'].errors" class="invalid-feedback">
+                <div *ngIf="f['total'].errors['required']">Total Amount is required</div>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6">
+          <label for="caddress">Customer Address</label>
+          <input type="text" formControlName="caddress" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['caddress'].errors }" />
+          <div *ngIf="submitted && f['caddress'].errors" class="invalid-feedback">
+              <div *ngIf="f['caddress'].errors['required']">Customer Address is required</div>
+          </div>
+      </div>
+
+
+
+
+
+
+                </div>
+                <div class="form-group cent">
+                    <button  class="btn btn-primary">
+                        <!-- <span  class="spinner-border spinner-border-sm mr-1"></span> -->
+                        Submit
+                    </button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modalDismiss()">Close</button>
+  </div>
+</ng-template>
+</div>
+
+
